@@ -20,7 +20,7 @@ npm install catbuffer-typescript
 
 npm install browserify -g
 
- browserify -r ./node_modules/symbol-sdk -r ./node_modules/rxjs/operators -r ./node_modules/rxjs -r ./node_modules/js-sha3 -r ./node_modules/jsbn -r ./node_modules/buffer -o symbol-sdk-0.19.0.js
+browserify -r ./node_modules/symbol-sdk -r ./node_modules/rxjs/operators -r ./node_modules/rxjs -r ./node_modules/js-sha3 -r ./node_modules/jsbn -r ./node_modules/buffer -o symbol-sdk-0.19.0.js
 browserify -r ./node_modules/symbol-hd-wallets -o symbol-hd-wallets-0.10.0.js
 browserify -r ./node_modules/symbol-qr-library -o symbol-qr-library-0.10.0.js
 browserify -r ./node_modules/catbuffer-typescript -o catbuffer-typescript.0.0.18.js
