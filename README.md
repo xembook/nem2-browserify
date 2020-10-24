@@ -20,6 +20,7 @@ npm install symbol-sdk
 npm install rxjs
 npm install symbol-qr-library
 npm install symbol-hd-wallets
+npm install symbol-uri-scheme
 
 npm install browserify -g
 
