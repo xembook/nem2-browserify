@@ -1,8 +1,5 @@
 # nem2-browserify
-
-注意！ライブラリ間の依存関係は解決していません。
-例えばAddressクラスなどは複数のライブラリに同じように定義されておりinstanceofなどでの比較時にfalseを返してしまいます。
-大規模なアプリケーションを構築される方は独自にwebpackなどでモジュール化されることをおすすめします。
+symbol-qr-libraryやsymbol-hd-walletsを使う場合はsymbol-sdk-pack-0.x.jsを使用してください。
 
 ## how to build
 ```sh
