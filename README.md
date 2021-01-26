@@ -19,13 +19,22 @@ npm install jsbn
 npm install symbol-qr-library
 npm install symbol-hd-wallets
 npm install symbol-uri-scheme
-
+npm install graphql
+npm install graphql-tag
+npm install apollo-client
+npm install apollo-link-http
+npm install apollo-cache-inmemory
 
 npm install browserify -g
 
 browserify -r ./node_modules/symbol-sdk -r ./node_modules/rxjs/operators -r ./node_modules/rxjs -r ./node_modules/js-sha3 -r ./node_modules/jsbn -r ./node_modules/buffer -r ./node_modules/catbuffer-typescript -o symbol-sdk-0.22.2.js
 
 browserify -r ./node_modules/symbol-qr-library -r ./node_modules/symbol-sdk -r ./node_modules/rxjs/operators -r ./node_modules/rxjs -r ./node_modules/js-sha3 -r ./node_modules/jsbn -r ./node_modules/buffer -r ./node_modules/catbuffer-typescript -r ./node_modules/symbol-hd-wallets -o symbol-sdk-pack-0.22.2.js
+
+browserify -r ./node_modules/apollo-client -o apollo-client-2.6.10.js
+browserify -r ./node_modules/apollo-cache-inmemory -o apollo-cache-inmemory-1.6.6.js
+browserify -r ./node_modules/apollo-link-http -o apollo-link-http-1.5.17.js
+browserify -r ./node_modules/graphql-tag -o graphql-tag-2.11.0.js
 
 ```
 
