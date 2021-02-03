@@ -10,7 +10,7 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 source .bashrc
 nvm ls-remote
-nvm install  v12.16.2
+nvm install  v14.15.4
 
 npm install utf8@2.1.2
 npm install symbol-sdk
@@ -27,9 +27,9 @@ npm install apollo-cache-inmemory
 
 npm install browserify -g
 
-browserify -r ./node_modules/symbol-sdk -r ./node_modules/rxjs/operators -r ./node_modules/rxjs -r ./node_modules/js-sha3 -r ./node_modules/jsbn -r ./node_modules/buffer -r ./node_modules/catbuffer-typescript -o symbol-sdk-0.22.2.js
+browserify -r ./node_modules/symbol-sdk -r ./node_modules/rxjs/operators -r ./node_modules/rxjs -r ./node_modules/js-sha3 -r ./node_modules/jsbn -r ./node_modules/buffer -r ./node_modules/catbuffer-typescript -o symbol-sdk-0.23.1.js
 
-browserify -r ./node_modules/symbol-qr-library -r ./node_modules/symbol-sdk -r ./node_modules/rxjs/operators -r ./node_modules/rxjs -r ./node_modules/js-sha3 -r ./node_modules/jsbn -r ./node_modules/buffer -r ./node_modules/catbuffer-typescript -r ./node_modules/symbol-hd-wallets -o symbol-sdk-pack-0.22.2.js
+browserify -r ./node_modules/symbol-qr-library -r ./node_modules/symbol-sdk -r ./node_modules/rxjs/operators -r ./node_modules/rxjs -r ./node_modules/js-sha3 -r ./node_modules/jsbn -r ./node_modules/buffer -r ./node_modules/catbuffer-typescript -r ./node_modules/symbol-hd-wallets -o symbol-sdk-pack-0.23.1.js
 
 browserify -r ./node_modules/apollo-client -o apollo-client-2.6.10.js
 browserify -r ./node_modules/apollo-cache-inmemory -o apollo-cache-inmemory-1.6.6.js
@@ -40,7 +40,7 @@ browserify -r ./node_modules/graphql-tag -o graphql-tag-2.11.0.js
 
 ## how to use(sample)
 ```html
-<script src="symbol-sdk-0.22.2.js"></script>
+<script src="symbol-sdk-0.23.1.js"></script>
 ```
 
 ```js
