@@ -49,7 +49,7 @@ const op   = require("/node_modules/rxjs/operators");
 const rxjs = require("/node_modules/rxjs");
 const qr   = require("/node_modules/symbol-qr-library");
 
-const NODE = 'http://api-01.ap-northeast-1.testnet-0951-v1.symboldev.network:3000';
+const NODE = 'http://api-01.ap-northeast-1.testnet.symboldev.network:3000';
 const blockHttp = new nem.BlockHttp(NODE);
 blockHttp.getBlockByHeight(1).subscribe(x=>console.log(x));
 
