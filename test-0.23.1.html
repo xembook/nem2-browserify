@@ -31,7 +31,7 @@ describe('symbol-sdk.0.23.1',() => {
 	});
 
 	beforeAll(async()=>{
-		NODE = "http://18.144.6.168:3000";
+		NODE = "https://sym-test-01.opening-line.jp:3001";
 		nem = require("/node_modules/symbol-sdk");
 
 		repo = new nem.RepositoryFactoryHttp(NODE);
@@ -357,10 +357,11 @@ describe('symbol-sdk.0.23.1',() => {
 			[createTx(bob.publicAccount,6).toAggregate(alice.publicAccount)]
 			.concat(createTx(dave.publicAccount,3).toAggregate(alice.publicAccount))
 			.concat(msigTx.toAggregate(bob.publicAccount));
-
+signedTx = getSignedTx(aggregateArray,[bob].concat(carols.accounts).concat(dave));
+			clog(signedTx)
 			res = await transactionService.announce(
-				getSignedTx(aggregateArray,[bob].concat(carols.accounts).concat(dave)
-			),listener).toPromise()
+				signedTx
+			,listener).toPromise()
 			console.log(res);
 
 			carols2 = getCarolAccounts(20);
@@ -788,7 +789,7 @@ describe('symbol-sdk.0.23.1',() => {
 			.concat(subNamespaceTx.toAggregate(bob.publicAccount))
 
 			signedTx = getSignedTx(aggregateArray,[bob]);
-			clog(signedTx);
+//			clog(signedTx);
 			await expectAsync( transactionService.announce(
 				getSignedTx(aggregateArray,[bob])
 			,listener).toPromise())
@@ -823,7 +824,7 @@ describe('symbol-sdk.0.23.1',() => {
 			.concat(subNamespaceTx.toAggregate(bob.publicAccount))
 
 			signedTx = getSignedTx(aggregateArray,[bob]);
-			clog(signedTx);
+//			clog(signedTx);
 			await expectAsync( transactionService.announce(
 				getSignedTx(aggregateArray,[bob])
 			,listener).toPromise())
