@@ -323,9 +323,10 @@ describe('symbol-sdk.0.23.1',() => {
 			.toBeRejectedWith(new Error('Failure_Aggregate_Too_Many_Cosignatures'));
 		});
 
+
  	});
 
-	describe('Multisig',() => {
+	xdescribe('Multisig',() => {
 
 		beforeAll(async()=>{
 			getCarolAccounts = function(cnt){
@@ -339,9 +340,49 @@ describe('symbol-sdk.0.23.1',() => {
 				}
 				return {accounts:carols,addresses:carolAddresses}
 			}
+			getCarolAggregate = function(account,cnt){
+
+				carols = Array();
+				carolMultisigs = Array();
+				for(let i = 0; i <= cnt; i++){
+
+					carol = nem.Account.generateNewAccount(networkType)
+					msigTx = nem.MultisigAccountModificationTransaction.create(
+					    nem.Deadline.create(epochAdjustment),
+					    1,1,[account.address],[],nem.NetworkType.TEST_NET
+					);
+
+					carols.push(carol);
+					carolMultisigs.push(msigTx.toAggregate(carol.publicAccount));
+				}
+				return {aggTx:carolMultisigs,cosigs:carols};
+			}
+
 		})
 
 
+		it('catches Failure_Multisig_Max_Cosigned_Accounts', async () => {
+
+			carolsAggTxs = getCarolAggregate(bob,20);
+			const aggregateArray =
+			[createTx(bob.publicAccount,6).toAggregate(alice.publicAccount)]
+			.concat(carolsAggTxs.aggTx)
+			signedTx = getSignedTx(aggregateArray,[bob].concat(carolsAggTxs.cosigs));
+
+			res = await transactionService.announce(
+				signedTx
+			,listener).toPromise()
+			console.log(res);
+
+			carolsAggTxs2 = getCarolAggregate(bob,20);
+			const aggregateArray2 =
+			[createTx(bob.publicAccount,6).toAggregate(alice.publicAccount)]
+			.concat(carolsAggTxs2.aggTx)
+			signedTx2 = getSignedTx(aggregateArray2,[bob].concat(carolsAggTxs2.cosigs));
+
+			await expectAsync( transactionService.announce(signedTx2,listener).toPromise())
+			.toBeRejectedWith(new Error('Failure_Multisig_Max_Cosigned_Accounts'));
+		});
 
 		it('catches Failure_Multisig_Max_Cosignatories', async () => {
 
@@ -358,7 +399,6 @@ describe('symbol-sdk.0.23.1',() => {
 			.concat(createTx(dave.publicAccount,3).toAggregate(alice.publicAccount))
 			.concat(msigTx.toAggregate(bob.publicAccount));
 			signedTx = getSignedTx(aggregateArray,[bob].concat(carols.accounts).concat(dave));
-			clog(signedTx)
 			res = await transactionService.announce(
 				signedTx
 			,listener).toPromise()
@@ -451,7 +491,7 @@ describe('symbol-sdk.0.23.1',() => {
 		});
 	});
 
-	describe('Metadata',() => {
+	xdescribe('Metadata',() => {
 
 		beforeAll(async()=>{
 			getCarolAccounts = function(cnt){
@@ -599,7 +639,7 @@ describe('symbol-sdk.0.23.1',() => {
 		});
 	});
 
-	describe('Restriction',() => {
+	xdescribe('Restriction',() => {
 
 		beforeAll(async()=>{
 
@@ -916,7 +956,7 @@ describe('symbol-sdk.0.23.1',() => {
 
 
 	});
-	describe('Namespace',() => {
+	xdescribe('Namespace',() => {
 
 		beforeEach(()=>{
 			bob = nem.Account.generateNewAccount(networkType);
@@ -1179,7 +1219,7 @@ describe('symbol-sdk.0.23.1',() => {
 			.toBeRejectedWith(new Error('Failure_Namespace_Name_Id_Mismatch'));
 		});
 	});
-	describe('Mosaic',() => {
+	xdescribe('Mosaic',() => {
 
 		it('catches Failure_Mosaic_Supply_Exceeded', async () => {
 
