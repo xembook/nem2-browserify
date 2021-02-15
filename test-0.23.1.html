@@ -33,6 +33,7 @@ describe('symbol-sdk.0.23.1',() => {
 	beforeAll(async()=>{
 		NODE = "https://sym-test-01.opening-line.jp:3001";
 		nem = require("/node_modules/symbol-sdk");
+		sha3_256 = require('/node_modules/js-sha3').sha3_256;
 
 		repo = new nem.RepositoryFactoryHttp(NODE);
 		nsRepo = repo.createNamespaceRepository();
@@ -121,7 +122,7 @@ describe('symbol-sdk.0.23.1',() => {
 
 	});
 
-	describe('network properties', () => {
+	xdescribe('network properties', () => {
 
 		it('resolves to epochAdjustment', async () => {
 			expect(await repo.getEpochAdjustment().toPromise())
@@ -137,6 +138,97 @@ describe('symbol-sdk.0.23.1',() => {
 			expect(await repo.getGenerationHash().toPromise())
 			.toBe("45FBCF2F0EA36EFA7923C9BC923D6503169651F7FA4EFC46A8EAF5AE09057EBD")
 		})
+	});
+
+
+
+	describe('Lock',() => {
+
+		it('Failure_LockHash_Invalid_Mosaic_Amount', async () => {
+
+			aggregateArray =
+			[createTx(bob.publicAccount,2).toAggregate(alice.publicAccount)]
+			.concat([createTx(alice.publicAccount,1).toAggregate(bob.publicAccount)]);
+
+			aggTx = nem.AggregateTransaction.createBonded(
+				nem.Deadline.create(epochAdjustment),aggregateArray,networkType,[]
+			).setMaxFeeForAggregate(minFeeMultiplier,1);
+
+			signedTx = alice.sign(aggTx, generationHash);
+
+			hashLockTx = nem.HashLockTransaction.create(
+				nem.Deadline.create(epochAdjustment),
+				networkCurrency.createRelative(9),
+				nem.UInt64.fromUint(480),
+				signedTx,
+				networkType,
+				nem.UInt64.fromUint(1000000)
+			);
+
+			signedLockTx = alice.sign(hashLockTx, generationHash);
+
+			await expectAsync( transactionService.announce(signedLockTx,listener).toPromise())
+			.toBeRejectedWith(new Error('Failure_LockHash_Invalid_Mosaic_Amount'))
+		});
+
+		it('Failure_LockHash_Invalid_Duration', async () => {
+
+			aggregateArray =
+			[createTx(bob.publicAccount,2).toAggregate(alice.publicAccount)]
+			.concat([createTx(alice.publicAccount,1).toAggregate(bob.publicAccount)]);
+
+			aggTx = nem.AggregateTransaction.createBonded(
+				nem.Deadline.create(epochAdjustment),aggregateArray,networkType,[]
+			).setMaxFeeForAggregate(minFeeMultiplier,1);
+
+			signedTx = alice.sign(aggTx, generationHash);
+
+			hashLockTx = nem.HashLockTransaction.create(
+				nem.Deadline.create(epochAdjustment),
+				networkCurrency.createRelative(10),
+				nem.UInt64.fromUint(2 * 24 * 60 * 60 / 30 + 1),
+				signedTx,
+				networkType,
+				nem.UInt64.fromUint(1000000)
+			);
+
+			signedLockTx = alice.sign(hashLockTx, generationHash);
+
+			await expectAsync( transactionService.announce(signedLockTx,listener).toPromise())
+			.toBeRejectedWith(new Error('Failure_LockHash_Invalid_Duration'))
+		});
+		it('Failure_LockSecret_Invalid_Duration', async () => {
+
+			carol = nem.Account.generateNewAccount(networkType);
+
+			random = nem.Crypto.randomBytes(20);
+		    proof = random.toString('hex'); //秘密の合言葉
+		    hash = sha3_256.create();
+		    secret = hash.update(random).hex().toUpperCase();//ダイジェスト
+
+		    tx = nem.SecretLockTransaction.create(
+		        nem.Deadline.create(epochAdjustment),
+		        networkCurrency.createRelative(1),
+		        nem.UInt64.fromUint(365 * 24 * 3600 / 30 + 1),
+		        nem.LockHashAlgorithm.Op_Sha3_256,
+		        secret,
+		        carol.address,
+		        networkType
+		    );
+
+			const aggregateArray =
+			[createTx(bob.publicAccount,2).toAggregate(alice.publicAccount)]
+			.concat([tx.toAggregate(bob.publicAccount)]);
+
+			const signedTx = nem.AggregateTransaction.createComplete(
+				nem.Deadline.create(epochAdjustment),aggregateArray,networkType,[]
+			).setMaxFeeForAggregate(minFeeMultiplier,1)
+			.signTransactionWithCosignatories(alice,[bob],generationHash);
+
+			await expectAsync( transactionService.announce(signedTx,listener).toPromise())
+			.toBeRejectedWith(new Error('Failure_LockSecret_Invalid_Duration'))
+		});
+
 	});
 
 	xdescribe('Transaction',() => {
@@ -325,7 +417,6 @@ describe('symbol-sdk.0.23.1',() => {
 
 
 	});
-
 	xdescribe('Multisig',() => {
 
 		beforeAll(async()=>{
@@ -490,7 +581,6 @@ describe('symbol-sdk.0.23.1',() => {
 			.toBeRejectedWith(new Error('Failure_Multisig_Operation_Prohibited_By_Account'));
 		});
 	});
-
 	xdescribe('Metadata',() => {
 
 		beforeAll(async()=>{
@@ -638,7 +728,6 @@ describe('symbol-sdk.0.23.1',() => {
 
 		});
 	});
-
 	xdescribe('Restriction',() => {
 
 		beforeAll(async()=>{
@@ -945,7 +1034,7 @@ describe('symbol-sdk.0.23.1',() => {
 		});
 
 	});
-	describe('Namespace',() => {
+	xdescribe('Namespace',() => {
 
 		beforeEach(()=>{
 			bob = nem.Account.generateNewAccount(networkType);
@@ -1188,29 +1277,6 @@ describe('symbol-sdk.0.23.1',() => {
 			.toBeRejectedWith(new Error('Failure_Namespace_Root_Name_Reserved'));
 		});
 
-		
-		it('catches Failure_Namespace_Owner_Conflict "symbol"', async () => {
-
-			subMosaicId = new nem.NamespaceId(getRandMessage(64).toLowerCase());
-
-			subNamespaceTx = nem.NamespaceRegistrationTransaction.createSubNamespace(
-				nem.Deadline.create(epochAdjustment),
-				subMosaicId.fullName,
-				"symbol",
-				networkType,
-			);
-
-			const aggregateArray =
-			[createTx(bob.publicAccount,1).toAggregate(alice.publicAccount)]
-			.concat(subNamespaceTx.toAggregate(bob.publicAccount))
-
-			signedTx = getSignedTx(aggregateArray,[bob]);
-			await expectAsync( transactionService.announce(
-				getSignedTx(aggregateArray,[bob])
-			,listener).toPromise())
-			.toBeRejectedWith(new Error('Failure_Namespace_Owner_Conflict'));
-		});
-		
 		it('catches Failure_Namespace_Owner_Conflict "symbol"', async () => {
 
 			await expectAsync( transactionService.announce(
@@ -1219,7 +1285,13 @@ describe('symbol-sdk.0.23.1',() => {
 			.toBeRejectedWith(new Error('Failure_Namespace_Owner_Conflict'));
 		});
 
+		it('catches Failure_Namespace_Unknown_Parent', async () => {
 
+			await expectAsync( transactionService.announce(
+				getSubNamespaceSignedTx(bob,getRandMessage(64).toLowerCase())
+			,listener).toPromise())
+			.toBeRejectedWith(new Error('Failure_Namespace_Unknown_Parent'));
+		});
 
 		it('catches Failure_Namespace_Invalid_Name SUB', async () => {
 
