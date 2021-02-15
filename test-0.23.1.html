@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="ja">
 <head>
-    <meta charset="utf-8">
+		<meta charset="utf-8">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jasmine/3.3.0/jasmine.min.css">
 </head>
 <body>
@@ -20,8 +20,8 @@ describe('symbol-sdk.0.23.1',() => {
 	let minFeeMultiplier;
 	let medianFeeMultiplier;
 	let clog;
-	let  createCompleteAggregateTx;
-	let  createTx;
+	let createCompleteAggregateTx;
+	let createTx;
 	let getRandMessage;
 	let getSinedTx;
 	let bob;
@@ -78,9 +78,9 @@ describe('symbol-sdk.0.23.1',() => {
 		alice = nem.Account.createFromPrivateKey("803F16C54119EA888C2E7DDB1F5B9672ED93D44801D08DE68374A1125625B486",networkType);
 
 		clog = function(signedTx){
-		    console.log(NODE + "/transactionStatus/" + signedTx.hash);
-		    console.log(NODE + "/transactions/confirmed/" + signedTx.hash);
-		    console.log("http://explorer.testnet.symboldev.network/transactions/" + signedTx.hash);
+			console.log(NODE + "/transactionStatus/" + signedTx.hash);
+			console.log(NODE + "/transactions/confirmed/" + signedTx.hash);
+			console.log("http://explorer.testnet.symboldev.network/transactions/" + signedTx.hash);
 		}
 
 		createTx = function(publicAccount,amount){
@@ -100,7 +100,7 @@ describe('symbol-sdk.0.23.1',() => {
 			.concat([createTx(alice.publicAccount,bobAmount).toAggregate(bob.publicAccount)]);
 
 			return nem.AggregateTransaction.createComplete(
-			  nem.Deadline.create(epochAdjustment),aggregateArray,networkType,[]
+				nem.Deadline.create(epochAdjustment),aggregateArray,networkType,[]
 			).setMaxFeeForAggregate(minFeeMultiplier,1);
 		}
 
@@ -115,8 +115,8 @@ describe('symbol-sdk.0.23.1',() => {
 		}
 
 		getRandMessage = function(N){
-		  S="abcdefghijklmnopqrstuvwxyz"
-		  return Array.from(Array(N)).map(()=>S[Math.floor(Math.random()*S.length)]).join('')
+			S="abcdefghijklmnopqrstuvwxyz"
+			return Array.from(Array(N)).map(()=>S[Math.floor(Math.random()*S.length)]).join('')
 		}
 
 	});
@@ -137,12 +137,12 @@ describe('symbol-sdk.0.23.1',() => {
 			expect(await repo.getGenerationHash().toPromise())
 			.toBe("45FBCF2F0EA36EFA7923C9BC923D6503169651F7FA4EFC46A8EAF5AE09057EBD")
 		})
- 	});
+	});
 
-	describe('Transaction',() => {
+	xdescribe('Transaction',() => {
 
-		let  createCompleteAggregateTx;
-		let  createTx;
+		let createCompleteAggregateTx;
+		let createTx;
 		beforeAll(async()=>{
 
 			createTx = function(publicAccount,amount){
@@ -162,8 +162,8 @@ describe('symbol-sdk.0.23.1',() => {
 				.concat([createTx(alice.publicAccount,bobAmount).toAggregate(bob.publicAccount)]);
 
 				return nem.AggregateTransaction.createComplete(
-		          nem.Deadline.create(epochAdjustment),aggregateArray,networkType,[]
-			  	).setMaxFeeForAggregate(minFeeMultiplier,1);
+					nem.Deadline.create(epochAdjustment),aggregateArray,networkType,[]
+				).setMaxFeeForAggregate(minFeeMultiplier,1);
 			}
 		})
 
@@ -173,7 +173,7 @@ describe('symbol-sdk.0.23.1',() => {
 
 		it('catches Failure_Core_Insufficient_Balance', async () => {
 
-	        const signedTx = createAggregateTx(alice,1,bob,2)
+			const signedTx = createAggregateTx(alice,1,bob,2)
 			.signTransactionWithCosignatories(alice,[bob],generationHash);
 
 			await expectAsync( transactionService.announce(signedTx,listener).toPromise())
@@ -183,7 +183,7 @@ describe('symbol-sdk.0.23.1',() => {
 		it('catches Failure_Aggregate_Missing_Cosignatures', async () => {
 
 			const signedTx = createAggregateTx(alice,2,bob,1)
-	        .signTransactionWithCosignatories(alice,[],generationHash);
+			.signTransactionWithCosignatories(alice,[],generationHash);
 
 			await expectAsync( transactionService.announce(signedTx,listener).toPromise())
 			.toBeRejectedWith(new Error('Failure_Aggregate_Missing_Cosignatures'))
@@ -192,7 +192,7 @@ describe('symbol-sdk.0.23.1',() => {
 		it('catches Failure_Aggregate_Redundant_Cosignatures', async () => {
 
 			const signedTx = createAggregateTx(alice,2,bob,1)
-	        .signTransactionWithCosignatories(alice,[bob,bob],generationHash);
+			.signTransactionWithCosignatories(alice,[bob,bob],generationHash);
 
 			await expectAsync( transactionService.announce(signedTx,listener).toPromise())
 			.toBeRejectedWith(new Error('Failure_Aggregate_Redundant_Cosignatures'))
@@ -204,7 +204,7 @@ describe('symbol-sdk.0.23.1',() => {
 
 			carol = nem.Account.generateNewAccount(networkType + 1);
 			const signedTx = createAggregateTx(alice,2,carol,1)
-	        .signTransactionWithCosignatories(alice,[carol],generationHash);
+			.signTransactionWithCosignatories(alice,[carol],generationHash);
 
 			await expectAsync( transactionService.announce(signedTx,listener).toPromise())
 			.toBeRejectedWith(new Error('Failure_Core_Invalid_Address'));
@@ -304,8 +304,8 @@ describe('symbol-sdk.0.23.1',() => {
 			}
 
 			msigTx = nem.MultisigAccountModificationTransaction.create(
-			    nem.Deadline.create(epochAdjustment),
-			    1,1,carolAddresses,[],nem.NetworkType.TEST_NET
+				nem.Deadline.create(epochAdjustment),
+				1,1,carolAddresses,[],nem.NetworkType.TEST_NET
 			);
 
 			const aggregateArray =
@@ -324,7 +324,7 @@ describe('symbol-sdk.0.23.1',() => {
 		});
 
 
- 	});
+	});
 
 	xdescribe('Multisig',() => {
 
@@ -348,8 +348,8 @@ describe('symbol-sdk.0.23.1',() => {
 
 					carol = nem.Account.generateNewAccount(networkType)
 					msigTx = nem.MultisigAccountModificationTransaction.create(
-					    nem.Deadline.create(epochAdjustment),
-					    1,1,[account.address],[],nem.NetworkType.TEST_NET
+						nem.Deadline.create(epochAdjustment),
+						1,1,[account.address],[],nem.NetworkType.TEST_NET
 					);
 
 					carols.push(carol);
@@ -390,8 +390,8 @@ describe('symbol-sdk.0.23.1',() => {
 			carols = getCarolAccounts(20);
 
 			msigTx = nem.MultisigAccountModificationTransaction.create(
-			    nem.Deadline.create(epochAdjustment),
-			    1,1,[dave.address].concat(carols.addresses),[],nem.NetworkType.TEST_NET
+				nem.Deadline.create(epochAdjustment),
+				1,1,[dave.address].concat(carols.addresses),[],nem.NetworkType.TEST_NET
 			);
 
 			const aggregateArray =
@@ -409,8 +409,8 @@ describe('symbol-sdk.0.23.1',() => {
 				nem.Deadline.create(epochAdjustment),
 				[
 					nem.MultisigAccountModificationTransaction.create(
-				    nem.Deadline.create(epochAdjustment),
-				    1,1,carols2.addresses,[],nem.NetworkType.TEST_NET)
+					nem.Deadline.create(epochAdjustment),
+					1,1,carols2.addresses,[],nem.NetworkType.TEST_NET)
 					.toAggregate(bob.publicAccount)
 				],
 				networkType,[]
@@ -425,8 +425,8 @@ describe('symbol-sdk.0.23.1',() => {
 
 			carols = getCarolAccounts(20);
 			msigTx = nem.MultisigAccountModificationTransaction.create(
-			    nem.Deadline.create(epochAdjustment),
-			    1,1,[],carols.addresses,nem.NetworkType.TEST_NET
+				nem.Deadline.create(epochAdjustment),
+				1,1,[],carols.addresses,nem.NetworkType.TEST_NET
 			);
 
 			const aggregateArray =
@@ -446,13 +446,13 @@ describe('symbol-sdk.0.23.1',() => {
 			carols = getCarolAccounts(5);
 
 			msigTx = nem.MultisigAccountModificationTransaction.create(
-			    nem.Deadline.create(epochAdjustment),
-			    1,1,[dave.address].concat(carols.addresses),[],nem.NetworkType.TEST_NET
+				nem.Deadline.create(epochAdjustment),
+				1,1,[dave.address].concat(carols.addresses),[],nem.NetworkType.TEST_NET
 			);
 
 			msigTx2 = nem.MultisigAccountModificationTransaction.create(
-			    nem.Deadline.create(epochAdjustment),
-			    1,1,carols.addresses,[],nem.NetworkType.TEST_NET
+				nem.Deadline.create(epochAdjustment),
+				1,1,carols.addresses,[],nem.NetworkType.TEST_NET
 			);
 
 			const aggregateArray =
@@ -471,8 +471,8 @@ describe('symbol-sdk.0.23.1',() => {
 
 			carols = getCarolAccounts(1);
 			msigTx = nem.MultisigAccountModificationTransaction.create(
-			    nem.Deadline.create(epochAdjustment),
-			    1,1,carols.addresses,[],nem.NetworkType.TEST_NET
+				nem.Deadline.create(epochAdjustment),
+				1,1,carols.addresses,[],nem.NetworkType.TEST_NET
 			);
 
 			const aggregateArray =
@@ -513,14 +513,14 @@ describe('symbol-sdk.0.23.1',() => {
 		it('catches Failure_Metadata_Value_Too_Large', async () => {
 
 			accountKey = nem.KeyGenerator.generateUInt64Key("key_account");
-	        createAccountMetaTx = await metaService.createAccountMetadataTransaction(
-	            nem.Deadline.create(epochAdjustment),
-	            networkType,
-	            bob.address,//target
-	            accountKey,
-	            getRandMessage(1025),
-	            bob.address // sender
-	        ).toPromise();
+			createAccountMetaTx = await metaService.createAccountMetadataTransaction(
+				nem.Deadline.create(epochAdjustment),
+				networkType,
+				bob.address,//target
+				accountKey,
+				getRandMessage(1025),
+				bob.address // sender
+			).toPromise();
 
 			const aggregateArray =
 			[createTx(bob.publicAccount,0).toAggregate(alice.publicAccount)]
@@ -538,15 +538,15 @@ describe('symbol-sdk.0.23.1',() => {
 			mosaicId = new nem.NamespaceId( "mosaic__" + randomId);
 
 			mosaicKey = nem.KeyGenerator.generateUInt64Key("key_mosaic");
-	        createMosaicMetaTx = await metaService.createMosaicMetadataTransaction(
-	            nem.Deadline.create(epochAdjustment),
-	            networkType,
-	            bob.address,
-	            mosaicId,
-	            mosaicKey,
-	            getRandMessage(1025),
-	            bob.address
-	        ).toPromise();
+			createMosaicMetaTx = await metaService.createMosaicMetadataTransaction(
+				nem.Deadline.create(epochAdjustment),
+				networkType,
+				bob.address,
+				mosaicId,
+				mosaicKey,
+				getRandMessage(1025),
+				bob.address
+			).toPromise();
 
 			const aggregateArray =
 			[createTx(bob.publicAccount,0).toAggregate(alice.publicAccount)]
@@ -564,15 +564,15 @@ describe('symbol-sdk.0.23.1',() => {
 			mosaicId = new nem.NamespaceId( "mosaic__" + randomId);
 
 			mosaicKey = nem.KeyGenerator.generateUInt64Key("key_mosaic");
-	        createMosaicMetaTx = await metaService.createMosaicMetadataTransaction(
-	            nem.Deadline.create(epochAdjustment),
-	            networkType,
-	            bob.address,
-	            mosaicId,
-	            mosaicKey,
-	            getRandMessage(1024),
-	            bob.address
-	        ).toPromise();
+			createMosaicMetaTx = await metaService.createMosaicMetadataTransaction(
+				nem.Deadline.create(epochAdjustment),
+				networkType,
+				bob.address,
+				mosaicId,
+				mosaicKey,
+				getRandMessage(1024),
+				bob.address
+			).toPromise();
 
 			const aggregateArray =
 			[createTx(bob.publicAccount,0).toAggregate(alice.publicAccount)]
@@ -590,15 +590,15 @@ describe('symbol-sdk.0.23.1',() => {
 			accountId = new nem.NamespaceId("account_" + randomId);
 
 			namespaceKey = nem.KeyGenerator.generateUInt64Key("key_namespace");
-	        createNamespaceMetaTx = await metaService.createNamespaceMetadataTransaction(
-	            nem.Deadline.create(epochAdjustment),
-	            networkType,
-	            bob.address,
-	            accountId,
-	            namespaceKey,
-	            getRandMessage(1025),
-	            bob.address
-	        ).toPromise();
+			createNamespaceMetaTx = await metaService.createNamespaceMetadataTransaction(
+				nem.Deadline.create(epochAdjustment),
+				networkType,
+				bob.address,
+				accountId,
+				namespaceKey,
+				getRandMessage(1025),
+				bob.address
+			).toPromise();
 
 			const aggregateArray =
 			[createTx(bob.publicAccount,0).toAggregate(alice.publicAccount)]
@@ -616,15 +616,15 @@ describe('symbol-sdk.0.23.1',() => {
 			accountId = new nem.NamespaceId("account_" + randomId);
 
 			namespaceKey = nem.KeyGenerator.generateUInt64Key("key_namespace");
-	        createNamespaceMetaTx = await metaService.createNamespaceMetadataTransaction(
-	            nem.Deadline.create(epochAdjustment),
-	            networkType,
-	            bob.address,
-	            accountId,
-	            namespaceKey,
-	            getRandMessage(1024),
-	            bob.address
-	        ).toPromise();
+			createNamespaceMetaTx = await metaService.createNamespaceMetadataTransaction(
+				nem.Deadline.create(epochAdjustment),
+				networkType,
+				bob.address,
+				accountId,
+				namespaceKey,
+				getRandMessage(1024),
+				bob.address
+			).toPromise();
 
 			const aggregateArray =
 			[createTx(bob.publicAccount,0).toAggregate(alice.publicAccount)]
@@ -645,16 +645,16 @@ describe('symbol-sdk.0.23.1',() => {
 
 			mosaicAddressResTx = function(account,mosaicId,value){
 
-		      resKey = nem.KeyGenerator.generateUInt64Key("KYC".toLowerCase());
-		      return nem.MosaicAddressRestrictionTransaction.create(
-		        nem.Deadline.create(epochAdjustment),
-		        mosaicId, // mosaicId
-		        resKey, // restrictionKey
-		        account.address, // address
-		        nem.UInt64.fromUint(value), // newRestrictionValue
-		        networkType,
-		      );
-		    }
+				resKey = nem.KeyGenerator.generateUInt64Key("KYC".toLowerCase());
+				return nem.MosaicAddressRestrictionTransaction.create(
+					nem.Deadline.create(epochAdjustment),
+					mosaicId, // mosaicId
+					resKey, // restrictionKey
+					account.address, // address
+					nem.UInt64.fromUint(value), // newRestrictionValue
+					networkType,
+				);
+			}
 		})
 
 
@@ -699,24 +699,24 @@ describe('symbol-sdk.0.23.1',() => {
 			);
 
 			distMosaicTx = function(publicAccount,mosaicId){
-		      message = getRandMessage(1023);
+				message = getRandMessage(1023);
 
-		      return     nem.TransferTransaction.create(
-		          nem.Deadline.create(epochAdjustment),
-		          publicAccount.address,
-		          [new nem.Mosaic(mosaicId, nem.UInt64.fromUint(1))],
-		          nem.PlainMessage.create(message),
-		          networkType
-		        );
-		    }
+				return	 nem.TransferTransaction.create(
+					nem.Deadline.create(epochAdjustment),
+					publicAccount.address,
+					[new nem.Mosaic(mosaicId, nem.UInt64.fromUint(1))],
+					nem.PlainMessage.create(message),
+					networkType
+				);
+			}
 
 			const aggregateArray =
 			[createTx(bob.publicAccount,100).toAggregate(alice.publicAccount)]
-            .concat(mosaicDefTx.toAggregate(bob.publicAccount))
-            .concat(mosaicChangeTx.toAggregate(bob.publicAccount))
-            .concat(creatreMosaicGlobalResTx.toAggregate(bob.publicAccount))
+			.concat(mosaicDefTx.toAggregate(bob.publicAccount))
+			.concat(mosaicChangeTx.toAggregate(bob.publicAccount))
+			.concat(creatreMosaicGlobalResTx.toAggregate(bob.publicAccount))
 			.concat(mosaicAddressResTx(bob,mosaicId,1).toAggregate(bob.publicAccount))
-	        .concat(mosaicAddressResTx(carol1,mosaicId,0).toAggregate(bob.publicAccount))
+			.concat(mosaicAddressResTx(carol1,mosaicId,0).toAggregate(bob.publicAccount))
 			.concat(distMosaicTx(carol1.publicAccount,mosaicId).toAggregate(bob.publicAccount));
 
 			await expectAsync( transactionService.announce(
@@ -733,12 +733,12 @@ describe('symbol-sdk.0.23.1',() => {
 			mosaicId = nem.MosaicId.createFromNonce(nonce, bob.address)
 
 			addressResTx = nem.AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
-		      nem.Deadline.create(epochAdjustment),
-		      nem.AddressRestrictionFlag.AllowIncomingAddress,
-		      [carol1.address],
-		      [],
-		      networkType
-		    );
+				nem.Deadline.create(epochAdjustment),
+				nem.AddressRestrictionFlag.AllowIncomingAddress,
+				[carol1.address],
+				[],
+				networkType
+			);
 
 			const aggregateArray =
 			[addressResTx.toAggregate(bob.publicAccount)]
@@ -757,12 +757,12 @@ describe('symbol-sdk.0.23.1',() => {
 			mosaicId = nem.MosaicId.createFromNonce(nonce, bob.address)
 
 			addressResTx = nem.AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
-		      nem.Deadline.create(epochAdjustment),
-		      nem.AddressRestrictionFlag.BlockIncomingAddress,
-		      [alice.address],
-		      [],
-		      networkType
-		    );
+				nem.Deadline.create(epochAdjustment),
+				nem.AddressRestrictionFlag.BlockIncomingAddress,
+				[alice.address],
+				[],
+				networkType
+			);
 
 			const aggregateArray =
 			[addressResTx.toAggregate(bob.publicAccount)]
@@ -782,12 +782,12 @@ describe('symbol-sdk.0.23.1',() => {
 			mosaicId = nem.MosaicId.createFromNonce(nonce, bob.address)
 
 			addressResTx = nem.AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
-		      nem.Deadline.create(epochAdjustment),
-		      nem.AddressRestrictionFlag.AllowOutgoingAddress,
-		      [alice.address],
-		      [],
-		      networkType
-		    );
+				nem.Deadline.create(epochAdjustment),
+				nem.AddressRestrictionFlag.AllowOutgoingAddress,
+				[alice.address],
+				[],
+				networkType
+			);
 
 			const aggregateArray =
 			[addressResTx.toAggregate(bob.publicAccount)]
@@ -807,12 +807,12 @@ describe('symbol-sdk.0.23.1',() => {
 			mosaicId = nem.MosaicId.createFromNonce(nonce, bob.address)
 
 			addressResTx = nem.AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
-		      nem.Deadline.create(epochAdjustment),
-		      nem.AddressRestrictionFlag.BlockOutgoingAddress,
-		      [alice.address],
-		      [],
-		      networkType
-		    );
+				nem.Deadline.create(epochAdjustment),
+				nem.AddressRestrictionFlag.BlockOutgoingAddress,
+				[alice.address],
+				[],
+				networkType
+			);
 
 			const aggregateArray =
 			[addressResTx.toAggregate(bob.publicAccount)]
@@ -852,34 +852,32 @@ describe('symbol-sdk.0.23.1',() => {
 			);
 
 			distMosaicTx = function(publicAccount,mosaicId){
-		      message = getRandMessage(1023);
+				message = getRandMessage(1023);
 
-		      return     nem.TransferTransaction.create(
-		          nem.Deadline.create(epochAdjustment),
-		          publicAccount.address,
-		          [new nem.Mosaic(mosaicId, nem.UInt64.fromUint(1))],
-		          nem.PlainMessage.create(message),
-		          networkType
-		        );
-		    }
+				return	 nem.TransferTransaction.create(
+					nem.Deadline.create(epochAdjustment),
+					publicAccount.address,
+					[new nem.Mosaic(mosaicId, nem.UInt64.fromUint(1))],
+					nem.PlainMessage.create(message),
+					networkType
+				);
+			}
 
 			mosaicRexTx = nem.AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
-		      nem.Deadline.create(epochAdjustment),
-		      nem.MosaicRestrictionFlag.AllowMosaic,
-		      [mosaicDefTx.mosaicId],
-		      [],
-		      networkType
-		    );
+				nem.Deadline.create(epochAdjustment),
+				nem.MosaicRestrictionFlag.AllowMosaic,
+				[mosaicDefTx.mosaicId],
+				[],
+				networkType
+			);
 
 
 			const aggregateArray =
 			[createTx(bob.publicAccount,50).toAggregate(alice.publicAccount)]
-            .concat(mosaicDefTx.toAggregate(bob.publicAccount))
-            .concat(mosaicChangeTx.toAggregate(bob.publicAccount))
+			.concat(mosaicDefTx.toAggregate(bob.publicAccount))
+			.concat(mosaicChangeTx.toAggregate(bob.publicAccount))
 			.concat(mosaicRexTx.toAggregate(bob.publicAccount))
 			.concat(createTx(bob.publicAccount,1).toAggregate(alice.publicAccount))
-
-
 
 			await expectAsync( transactionService.announce(
 				getSignedTx(aggregateArray,[bob])
@@ -914,34 +912,31 @@ describe('symbol-sdk.0.23.1',() => {
 			);
 
 			distMosaicTx = function(publicAccount,mosaicId){
-		      message = getRandMessage(1023);
+				message = getRandMessage(1023);
 
-		      return     nem.TransferTransaction.create(
-		          nem.Deadline.create(epochAdjustment),
-		          publicAccount.address,
-		          [new nem.Mosaic(mosaicId, nem.UInt64.fromUint(1))],
-		          nem.PlainMessage.create(message),
-		          networkType
-		        );
-		    }
+				return	 nem.TransferTransaction.create(
+					nem.Deadline.create(epochAdjustment),
+					publicAccount.address,
+					[new nem.Mosaic(mosaicId, nem.UInt64.fromUint(1))],
+					nem.PlainMessage.create(message),
+					networkType
+				);
+			}
 
 			mosaicRexTx = nem.AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
-		      nem.Deadline.create(epochAdjustment),
-		      nem.MosaicRestrictionFlag.BlockMosaic,
-		      [mosaicDefTx.mosaicId],
-		      [],
-		      networkType
-		    );
-
+				nem.Deadline.create(epochAdjustment),
+				nem.MosaicRestrictionFlag.BlockMosaic,
+				[mosaicDefTx.mosaicId],
+				[],
+				networkType
+			);
 
 			const aggregateArray =
 			[createTx(bob.publicAccount,50).toAggregate(alice.publicAccount)]
-            .concat(mosaicDefTx.toAggregate(bob.publicAccount))
-            .concat(mosaicChangeTx.toAggregate(bob.publicAccount))
+			.concat(mosaicDefTx.toAggregate(bob.publicAccount))
+			.concat(mosaicChangeTx.toAggregate(bob.publicAccount))
 			.concat(mosaicRexTx.toAggregate(carol1.publicAccount))
 			.concat(distMosaicTx(carol1.publicAccount,mosaicId).toAggregate(bob.publicAccount));
-
-
 
 			await expectAsync( transactionService.announce(
 				getSignedTx(aggregateArray,[bob,carol1])
@@ -949,23 +944,57 @@ describe('symbol-sdk.0.23.1',() => {
 			.toBeRejectedWith(new Error('Failure_RestrictionAccount_Mosaic_Transfer_Prohibited'));
 		});
 
-
-
-
-
-
-
 	});
-	xdescribe('Namespace',() => {
+	describe('Namespace',() => {
 
 		beforeEach(()=>{
 			bob = nem.Account.generateNewAccount(networkType);
 		});
 
+		beforeAll(async()=>{
+
+			getNamespaceSignedTx = function(account,name){
+
+				namespaceId = new nem.NamespaceId( name);
+				namespaceTx = nem.NamespaceRegistrationTransaction.createRootNamespace(
+					nem.Deadline.create(epochAdjustment),
+					namespaceId.fullName,
+					nem.UInt64.fromUint(90000),
+					networkType
+				);
+
+				const aggregateArray =
+				[createTx(account.publicAccount,300).toAggregate(alice.publicAccount)]
+				.concat(namespaceTx.toAggregate(account.publicAccount))
+
+				return getSignedTx(aggregateArray,[account]);
+			}
+
+			getSubNamespaceSignedTx = function(account,name){
+
+
+				subMosaicId = new nem.NamespaceId(getRandMessage(64).toLowerCase());
+
+				subNamespaceTx = nem.NamespaceRegistrationTransaction.createSubNamespace(
+					nem.Deadline.create(epochAdjustment),
+					subMosaicId.fullName,
+					name,
+					networkType,
+				);
+
+				const aggregateArray =
+				[createTx(account.publicAccount,1).toAggregate(alice.publicAccount)]
+				.concat(subNamespaceTx.toAggregate(account.publicAccount))
+
+				return getSignedTx(aggregateArray,[account]);
+			}
+
+		})
+
 		it('catches Failure_Namespace_Invalid_Name', async () => {
 
 			randomId = getRandMessage(57).toLowerCase();
-	        mosaicId = new nem.NamespaceId( "mosaic__" + randomId);
+			mosaicId = new nem.NamespaceId( "mosaic__" + randomId);
 			accountId = new nem.NamespaceId("account_" + randomId);
 
 			namespaceTx = nem.NamespaceRegistrationTransaction.createRootNamespace(
@@ -984,7 +1013,7 @@ describe('symbol-sdk.0.23.1',() => {
 		it('catches Failure_Namespace_Invalid_Duration TOO SHORT', async () => {
 
 			randomId = getRandMessage(56).toLowerCase();
-	        mosaicId = new nem.NamespaceId( "mosaic__" + randomId);
+			mosaicId = new nem.NamespaceId( "mosaic__" + randomId);
 			accountId = new nem.NamespaceId("account_" + randomId);
 
 			namespaceTx = nem.NamespaceRegistrationTransaction.createRootNamespace(
@@ -1003,7 +1032,7 @@ describe('symbol-sdk.0.23.1',() => {
 		it('catches Failure_Namespace_Invalid_Duration TOO LONG', async () => {
 
 			randomId = getRandMessage(56).toLowerCase();
-	        mosaicId = new nem.NamespaceId( "mosaic__" + randomId);
+			mosaicId = new nem.NamespaceId( "mosaic__" + randomId);
 			accountId = new nem.NamespaceId("account_" + randomId);
 
 			namespaceTx = nem.NamespaceRegistrationTransaction.createRootNamespace(
@@ -1021,14 +1050,14 @@ describe('symbol-sdk.0.23.1',() => {
 
 		it('catches Failure_Namespace_Invalid_Duration Reserved', async () => {
 
-	        mosaicId = new nem.NamespaceId( "symbol");
+			mosaicId = new nem.NamespaceId( "symbol");
 
 			namespaceTx = nem.NamespaceRegistrationTransaction.createRootNamespace(
-		        nem.Deadline.create(epochAdjustment),
-		        mosaicId.fullName,
-		        nem.UInt64.fromUint(90000),
-		        networkType
-		    );
+				nem.Deadline.create(epochAdjustment),
+				mosaicId.fullName,
+				nem.UInt64.fromUint(90000),
+				networkType
+			);
 
 			const aggregateArray =
 			[createTx(bob.publicAccount,300).toAggregate(alice.publicAccount)]
@@ -1040,16 +1069,136 @@ describe('symbol-sdk.0.23.1',() => {
 			.toBeRejectedWith(new Error('Failure_Namespace_Invalid_Duration'));
 		});
 
-		it('catches Failure_Namespace_Invalid_Name parent is reserved', async () => {
 
-			subMosaicId = new nem.NamespaceId(getRandMessage(65).toLowerCase());
+		it('catches Failure_Namespace_Invalid_Duration Reserved "symbol"', async () => {
 
-	        subNamespaceTx = nem.NamespaceRegistrationTransaction.createSubNamespace(
-	          nem.Deadline.create(epochAdjustment),
-	          subMosaicId.fullName,
-	          "symbol",
-	          networkType,
-	        );
+			await expectAsync( transactionService.announce(
+				getNamespaceSignedTx(bob,"symbol")
+			,listener).toPromise())
+			.toBeRejectedWith(new Error('Failure_Namespace_Invalid_Duration'));
+		});
+
+
+		it('catches Failure_Namespace_Root_Name_Reserved "symbl"', async () => {
+
+			await expectAsync( transactionService.announce(
+				getNamespaceSignedTx(bob,"symbl")
+			,listener).toPromise())
+			.toBeRejectedWith(new Error('Failure_Namespace_Root_Name_Reserved'));
+		});
+
+		it('catches Failure_Namespace_Root_Name_Reserved "xym"', async () => {
+
+			await expectAsync( transactionService.announce(
+				getNamespaceSignedTx(bob,"xym")
+			,listener).toPromise())
+			.toBeRejectedWith(new Error('Failure_Namespace_Root_Name_Reserved'));
+		});
+
+		it('catches Failure_Namespace_Root_Name_Reserved "xem"', async () => {
+
+			await expectAsync( transactionService.announce(
+				getNamespaceSignedTx(bob,"xem")
+			,listener).toPromise())
+			.toBeRejectedWith(new Error('Failure_Namespace_Root_Name_Reserved'));
+		});
+
+		it('catches Failure_Namespace_Root_Name_Reserved "nem"', async () => {
+
+			await expectAsync( transactionService.announce(
+				getNamespaceSignedTx(bob,"nem")
+			,listener).toPromise())
+			.toBeRejectedWith(new Error('Failure_Namespace_Root_Name_Reserved'));
+		});
+
+		it('catches Failure_Namespace_Root_Name_Reserved "user"', async () => {
+
+			await expectAsync( transactionService.announce(
+				getNamespaceSignedTx(bob,"user")
+			,listener).toPromise())
+			.toBeRejectedWith(new Error('Failure_Namespace_Root_Name_Reserved'));
+		});
+
+		it('catches Failure_Namespace_Root_Name_Reserved "account"', async () => {
+
+			await expectAsync( transactionService.announce(
+				getNamespaceSignedTx(bob,"account")
+			,listener).toPromise())
+			.toBeRejectedWith(new Error('Failure_Namespace_Root_Name_Reserved'));
+		});
+
+		it('catches Failure_Namespace_Root_Name_Reserved "org"', async () => {
+
+			await expectAsync( transactionService.announce(
+				getNamespaceSignedTx(bob,"org")
+			,listener).toPromise())
+			.toBeRejectedWith(new Error('Failure_Namespace_Root_Name_Reserved'));
+		});
+
+		it('catches Failure_Namespace_Root_Name_Reserved "com"', async () => {
+
+			await expectAsync( transactionService.announce(
+				getNamespaceSignedTx(bob,"com")
+			,listener).toPromise())
+			.toBeRejectedWith(new Error('Failure_Namespace_Root_Name_Reserved'));
+		});
+
+		it('catches Failure_Namespace_Root_Name_Reserved "biz"', async () => {
+
+			await expectAsync( transactionService.announce(
+				getNamespaceSignedTx(bob,"biz")
+			,listener).toPromise())
+			.toBeRejectedWith(new Error('Failure_Namespace_Root_Name_Reserved'));
+		});
+
+		it('catches Failure_Namespace_Root_Name_Reserved "net"', async () => {
+
+			await expectAsync( transactionService.announce(
+				getNamespaceSignedTx(bob,"net")
+			,listener).toPromise())
+			.toBeRejectedWith(new Error('Failure_Namespace_Root_Name_Reserved'));
+		});
+
+		it('catches Failure_Namespace_Root_Name_Reserved "edu"', async () => {
+
+			await expectAsync( transactionService.announce(
+				getNamespaceSignedTx(bob,"edu")
+			,listener).toPromise())
+			.toBeRejectedWith(new Error('Failure_Namespace_Root_Name_Reserved'));
+		});
+		it('catches Failure_Namespace_Root_Name_Reserved "mil"', async () => {
+
+			await expectAsync( transactionService.announce(
+				getNamespaceSignedTx(bob,"mil")
+			,listener).toPromise())
+			.toBeRejectedWith(new Error('Failure_Namespace_Root_Name_Reserved'));
+		});
+		it('catches Failure_Namespace_Root_Name_Reserved "gov"', async () => {
+
+			await expectAsync( transactionService.announce(
+				getNamespaceSignedTx(bob,"gov")
+			,listener).toPromise())
+			.toBeRejectedWith(new Error('Failure_Namespace_Root_Name_Reserved'));
+		});
+		it('catches Failure_Namespace_Root_Name_Reserved "info"', async () => {
+
+			await expectAsync( transactionService.announce(
+				getNamespaceSignedTx(bob,"info")
+			,listener).toPromise())
+			.toBeRejectedWith(new Error('Failure_Namespace_Root_Name_Reserved'));
+		});
+
+		
+		it('catches Failure_Namespace_Owner_Conflict "symbol"', async () => {
+
+			subMosaicId = new nem.NamespaceId(getRandMessage(64).toLowerCase());
+
+			subNamespaceTx = nem.NamespaceRegistrationTransaction.createSubNamespace(
+				nem.Deadline.create(epochAdjustment),
+				subMosaicId.fullName,
+				"symbol",
+				networkType,
+			);
 
 			const aggregateArray =
 			[createTx(bob.publicAccount,1).toAggregate(alice.publicAccount)]
@@ -1059,30 +1208,39 @@ describe('symbol-sdk.0.23.1',() => {
 			await expectAsync( transactionService.announce(
 				getSignedTx(aggregateArray,[bob])
 			,listener).toPromise())
-			.toBeRejectedWith(new Error('Failure_Namespace_Invalid_Name'));
+			.toBeRejectedWith(new Error('Failure_Namespace_Owner_Conflict'));
 		});
+		
+		it('catches Failure_Namespace_Owner_Conflict "symbol"', async () => {
+
+			await expectAsync( transactionService.announce(
+				getSubNamespaceSignedTx(bob,"symbol")
+			,listener).toPromise())
+			.toBeRejectedWith(new Error('Failure_Namespace_Owner_Conflict'));
+		});
+
 
 
 		it('catches Failure_Namespace_Invalid_Name SUB', async () => {
 
 			randomId = getRandMessage(56).toLowerCase();
-	        mosaicId = new nem.NamespaceId( "mosaic__" + randomId);
+			mosaicId = new nem.NamespaceId( "mosaic__" + randomId);
 			subMosaicId = new nem.NamespaceId(getRandMessage(65).toLowerCase());
 
 
 			namespaceTx = nem.NamespaceRegistrationTransaction.createRootNamespace(
-		        nem.Deadline.create(epochAdjustment),
-		        mosaicId.fullName,
-		        nem.UInt64.fromUint(86400),
-		        networkType
-		    );
+				nem.Deadline.create(epochAdjustment),
+				mosaicId.fullName,
+				nem.UInt64.fromUint(86400),
+				networkType
+			);
 
-	        subNamespaceTx = nem.NamespaceRegistrationTransaction.createSubNamespace(
-	          nem.Deadline.create(epochAdjustment),
-	          subMosaicId.fullName,
-	          mosaicId.fullName,
-	          networkType,
-	        );
+			subNamespaceTx = nem.NamespaceRegistrationTransaction.createSubNamespace(
+				nem.Deadline.create(epochAdjustment),
+				subMosaicId.fullName,
+				mosaicId.fullName,
+				networkType,
+			);
 
 			const aggregateArray =
 			[createTx(bob.publicAccount,1).toAggregate(alice.publicAccount)]
@@ -1102,20 +1260,20 @@ describe('symbol-sdk.0.23.1',() => {
 			bob2 = nem.Account.generateNewAccount(networkType);
 
 			randomId = getRandMessage(56).toLowerCase();
-	        mosaicId = new nem.NamespaceId( "mosaic__" + randomId);
+			mosaicId = new nem.NamespaceId( "mosaic__" + randomId);
 			namespaceTx = nem.NamespaceRegistrationTransaction.createRootNamespace(
-		        nem.Deadline.create(epochAdjustment),
-		        mosaicId.fullName,
-		        nem.UInt64.fromUint(86400),
-		        networkType
-		    );
+				nem.Deadline.create(epochAdjustment),
+				mosaicId.fullName,
+				nem.UInt64.fromUint(86400),
+				networkType
+			);
 
 			namespaceTx2 = nem.NamespaceRegistrationTransaction.createRootNamespace(
-		        nem.Deadline.create(epochAdjustment),
-		        mosaicId.fullName,
-		        nem.UInt64.fromUint(86400),
-		        networkType
-		    );
+				nem.Deadline.create(epochAdjustment),
+				mosaicId.fullName,
+				nem.UInt64.fromUint(86400),
+				networkType
+			);
 
 			const aggregateArray =
 			[createTx(bob.publicAccount,200).toAggregate(alice.publicAccount)]
@@ -1132,31 +1290,31 @@ describe('symbol-sdk.0.23.1',() => {
 		it('catches Failure_Namespace_Invalid_Name SUB2', async () => {
 
 			randomId = getRandMessage(56).toLowerCase();
-	        mosaicId = new nem.NamespaceId( "mosaic__" + randomId);
+			mosaicId = new nem.NamespaceId( "mosaic__" + randomId);
 			subMosaicId = new nem.NamespaceId(getRandMessage(65).toLowerCase());
 			sub2MosaicId = new nem.NamespaceId(getRandMessage(12).toLowerCase());
 
 
 			namespaceTx = nem.NamespaceRegistrationTransaction.createRootNamespace(
-		        nem.Deadline.create(epochAdjustment),
-		        mosaicId.fullName,
-		        nem.UInt64.fromUint(86400),
-		        networkType
-		    );
+				nem.Deadline.create(epochAdjustment),
+				mosaicId.fullName,
+				nem.UInt64.fromUint(86400),
+				networkType
+			);
 
-	        subNamespaceTx = nem.NamespaceRegistrationTransaction.createSubNamespace(
-	          nem.Deadline.create(epochAdjustment),
-	          subMosaicId.fullName,
-	          mosaicId,
-	          networkType,
-	        );
+			subNamespaceTx = nem.NamespaceRegistrationTransaction.createSubNamespace(
+				nem.Deadline.create(epochAdjustment),
+				subMosaicId.fullName,
+				mosaicId,
+				networkType,
+			);
 
 			sub2NamespaceTx = nem.NamespaceRegistrationTransaction.createSubNamespace(
-	          nem.Deadline.create(epochAdjustment),
-	          sub2MosaicId.fullName,
-	          subMosaicId,
-	          networkType,
-	        );
+				nem.Deadline.create(epochAdjustment),
+				sub2MosaicId.fullName,
+				subMosaicId,
+				networkType,
+			);
 
 			const aggregateArray =
 			[createTx(bob.publicAccount,200).toAggregate(alice.publicAccount)]
@@ -1173,38 +1331,38 @@ describe('symbol-sdk.0.23.1',() => {
 		it('catches Failure_Namespace_Name_Id_Mismatch', async () => {
 
 			randomId = getRandMessage(56).toLowerCase();
-	        mosaicId = new nem.NamespaceId( "mosaic__" + randomId);
+			mosaicId = new nem.NamespaceId( "mosaic__" + randomId);
 			subMosaicId = new nem.NamespaceId(getRandMessage(12).toLowerCase());
 			sub2MosaicId = new nem.NamespaceId(getRandMessage(12).toLowerCase());
 			sub3MosaicId = new nem.NamespaceId(getRandMessage(12).toLowerCase());
 
 			namespaceTx = nem.NamespaceRegistrationTransaction.createRootNamespace(
-		        nem.Deadline.create(epochAdjustment),
-		        mosaicId.fullName,
-		        nem.UInt64.fromUint(86400),
-		        networkType
-		    );
+				nem.Deadline.create(epochAdjustment),
+				mosaicId.fullName,
+				nem.UInt64.fromUint(86400),
+				networkType
+			);
 
-	        subNamespaceTx = nem.NamespaceRegistrationTransaction.createSubNamespace(
-	          nem.Deadline.create(epochAdjustment),
-	          subMosaicId.fullName,
-	          mosaicId,
-	          networkType,
-	        );
+			subNamespaceTx = nem.NamespaceRegistrationTransaction.createSubNamespace(
+				nem.Deadline.create(epochAdjustment),
+				subMosaicId.fullName,
+				mosaicId,
+				networkType,
+			);
 
 			sub2NamespaceTx = nem.NamespaceRegistrationTransaction.createSubNamespace(
-	          nem.Deadline.create(epochAdjustment),
-	          sub2MosaicId.fullName,
-	          subMosaicId,
-	          networkType,
-	        );
+				nem.Deadline.create(epochAdjustment),
+				sub2MosaicId.fullName,
+				subMosaicId,
+				networkType,
+			);
 
 			sub3NamespaceTx = nem.NamespaceRegistrationTransaction.createSubNamespace(
-	          nem.Deadline.create(epochAdjustment),
-	          sub3MosaicId.fullName,
-	          sub2MosaicId,
-	          networkType,
-	        );
+				nem.Deadline.create(epochAdjustment),
+				sub3MosaicId.fullName,
+				sub2MosaicId,
+				networkType,
+			);
 
 			const aggregateArray =
 			[createTx(bob.publicAccount,200).toAggregate(alice.publicAccount)]
@@ -1224,28 +1382,24 @@ describe('symbol-sdk.0.23.1',() => {
 		it('catches Failure_Mosaic_Supply_Exceeded', async () => {
 
 			//モザイク作成
-	        nonce = nem.MosaicNonce.createRandom();
-	        mosaicDefTx = nem.MosaicDefinitionTransaction.create(
-	            nem.Deadline.create(epochAdjustment),
-	            nonce,
-	            nem.MosaicId.createFromNonce(nonce, bob.address),
-	            nem.MosaicFlags.create(true, true, true),
-	            0,
-	            nem.UInt64.fromUint(1),
-	            networkType
-	        );
+			nonce = nem.MosaicNonce.createRandom();
+			mosaicDefTx = nem.MosaicDefinitionTransaction.create(
+				nem.Deadline.create(epochAdjustment),
+				nonce,
+				nem.MosaicId.createFromNonce(nonce, bob.address),
+				nem.MosaicFlags.create(true, true, true),
+				0,
+				nem.UInt64.fromUint(1),
+				networkType
+			);
 			//モザイク変更
-	        mosaicChangeTx = nem.MosaicSupplyChangeTransaction.create(
-	            nem.Deadline.create(epochAdjustment),
-	            mosaicDefTx.mosaicId,
-	            nem.MosaicSupplyChangeAction.Increase,
-	            nem.UInt64.fromUint(9000000000000001),
-	            networkType
-	        );
-
-
-
-
+			mosaicChangeTx = nem.MosaicSupplyChangeTransaction.create(
+				nem.Deadline.create(epochAdjustment),
+				mosaicDefTx.mosaicId,
+				nem.MosaicSupplyChangeAction.Increase,
+				nem.UInt64.fromUint(9000000000000001),
+				networkType
+			);
 
 			const aggregateArray =
 			[createTx(bob.publicAccount,50).toAggregate(alice.publicAccount)]
@@ -1263,16 +1417,16 @@ describe('symbol-sdk.0.23.1',() => {
 			carol1 = nem.Account.generateNewAccount(networkType);
 
 			//モザイク作成
-	        nonce = nem.MosaicNonce.createRandom();
-	        mosaicDefTx = nem.MosaicDefinitionTransaction.create(
-	            nem.Deadline.create(epochAdjustment),
-	            nonce,
-	            nem.MosaicId.createFromNonce(nonce, carol1.address),
-	            nem.MosaicFlags.create(true, true, true),
-	            0,
-	            nem.UInt64.fromUint(3650*24*60*2 + 1),
-	            networkType
-	        );
+			nonce = nem.MosaicNonce.createRandom();
+			mosaicDefTx = nem.MosaicDefinitionTransaction.create(
+				nem.Deadline.create(epochAdjustment),
+				nonce,
+				nem.MosaicId.createFromNonce(nonce, carol1.address),
+				nem.MosaicFlags.create(true, true, true),
+				0,
+				nem.UInt64.fromUint(3650*24*60*2 + 1),
+				networkType
+			);
 
 			const aggregateArray =
 			[createTx(bob.publicAccount,50).toAggregate(alice.publicAccount)]
@@ -1288,16 +1442,16 @@ describe('symbol-sdk.0.23.1',() => {
 		it('catches Failure_Mosaic_Invalid_Duration', async () => {
 
 			//モザイク作成
-	        nonce = nem.MosaicNonce.createRandom();
-	        mosaicDefTx = nem.MosaicDefinitionTransaction.create(
-	            nem.Deadline.create(epochAdjustment),
-	            nonce,
-	            nem.MosaicId.createFromNonce(nonce, bob.address),
-	            nem.MosaicFlags.create(true, true, true),
-	            0,
-	            nem.UInt64.fromUint(3650*24*60*2 + 1),
-	            networkType
-	        );
+			nonce = nem.MosaicNonce.createRandom();
+			mosaicDefTx = nem.MosaicDefinitionTransaction.create(
+				nem.Deadline.create(epochAdjustment),
+				nonce,
+				nem.MosaicId.createFromNonce(nonce, bob.address),
+				nem.MosaicFlags.create(true, true, true),
+				0,
+				nem.UInt64.fromUint(3650*24*60*2 + 1),
+				networkType
+			);
 
 			const aggregateArray =
 			[createTx(bob.publicAccount,50).toAggregate(alice.publicAccount)]
@@ -1312,16 +1466,16 @@ describe('symbol-sdk.0.23.1',() => {
 		it('catches Failure_Mosaic_Invalid_Divisibility', async () => {
 
 			//モザイク作成
-	        nonce = nem.MosaicNonce.createRandom();
-	        mosaicDefTx = nem.MosaicDefinitionTransaction.create(
-	            nem.Deadline.create(epochAdjustment),
-	            nonce,
-	            nem.MosaicId.createFromNonce(nonce, bob.address),
-	            nem.MosaicFlags.create(true, true, true),
-	            7,
-	            nem.UInt64.fromUint(0),
-	            networkType
-	        );
+			nonce = nem.MosaicNonce.createRandom();
+			mosaicDefTx = nem.MosaicDefinitionTransaction.create(
+				nem.Deadline.create(epochAdjustment),
+				nonce,
+				nem.MosaicId.createFromNonce(nonce, bob.address),
+				nem.MosaicFlags.create(true, true, true),
+				7,
+				nem.UInt64.fromUint(0),
+				networkType
+			);
 
 			const aggregateArray =
 			[createTx(bob.publicAccount,50).toAggregate(alice.publicAccount)]
@@ -1365,8 +1519,8 @@ describe('symbol-sdk.0.23.1',() => {
 
 			const aggregateArray =
 			[createTx(bob.publicAccount,100).toAggregate(alice.publicAccount)]
-            .concat(mosaicDefTx.toAggregate(bob.publicAccount))
-            .concat(creatreMosaicGlobalResTx.toAggregate(bob.publicAccount))
+			.concat(mosaicDefTx.toAggregate(bob.publicAccount))
+			.concat(creatreMosaicGlobalResTx.toAggregate(bob.publicAccount))
 
 			await expectAsync( transactionService.announce(
 				getSignedTx(aggregateArray,[bob])
@@ -1382,16 +1536,16 @@ describe('symbol-sdk.0.23.1',() => {
 			mosaicId = nem.MosaicId.createFromNonce(nonce, bob.address)
 
 			distMosaicTx = function(publicAccount,mosaicId){
-		      message = getRandMessage(1023);
+				message = getRandMessage(1023);
 
-		      return     nem.TransferTransaction.create(
-		          nem.Deadline.create(epochAdjustment),
-		          publicAccount.address,
-		          [new nem.Mosaic(mosaicId, nem.UInt64.fromUint(1))],
-		          nem.PlainMessage.create(message),
-		          networkType
-		        );
-		    }
+				return	 nem.TransferTransaction.create(
+					nem.Deadline.create(epochAdjustment),
+					publicAccount.address,
+					[new nem.Mosaic(mosaicId, nem.UInt64.fromUint(1))],
+					nem.PlainMessage.create(message),
+					networkType
+				);
+			}
 
 
 			//モザイク作成
@@ -1406,13 +1560,13 @@ describe('symbol-sdk.0.23.1',() => {
 			);
 
 			//モザイク変更
-	        mosaicChangeTx = nem.MosaicSupplyChangeTransaction.create(
-	            nem.Deadline.create(epochAdjustment),
-	            mosaicDefTx.mosaicId,
-	            nem.MosaicSupplyChangeAction.Increase,
-	            nem.UInt64.fromUint(1000000),
-	            networkType
-	        );
+			mosaicChangeTx = nem.MosaicSupplyChangeTransaction.create(
+				nem.Deadline.create(epochAdjustment),
+				mosaicDefTx.mosaicId,
+				nem.MosaicSupplyChangeAction.Increase,
+				nem.UInt64.fromUint(1000000),
+				networkType
+			);
 
 			const aggregateArray =
 			[createTx(bob.publicAccount,100).toAggregate(alice.publicAccount)]
@@ -1436,16 +1590,16 @@ describe('symbol-sdk.0.23.1',() => {
 			mosaicId = nem.MosaicId.createFromNonce(nonce, bob.address)
 
 			distMosaicTx = function(publicAccount,mosaicId){
-		      message = getRandMessage(1023);
+				message = getRandMessage(1023);
 
-		      return     nem.TransferTransaction.create(
-		          nem.Deadline.create(epochAdjustment),
-		          publicAccount.address,
-		          [new nem.Mosaic(mosaicId, nem.UInt64.fromUint(1))],
-		          nem.PlainMessage.create(message),
-		          networkType
-		        );
-		    }
+				return	 nem.TransferTransaction.create(
+					nem.Deadline.create(epochAdjustment),
+					publicAccount.address,
+					[new nem.Mosaic(mosaicId, nem.UInt64.fromUint(1))],
+					nem.PlainMessage.create(message),
+					networkType
+				);
+			}
 
 			//モザイク作成
 			mosaicDefTx = nem.MosaicDefinitionTransaction.create(
@@ -1459,13 +1613,13 @@ describe('symbol-sdk.0.23.1',() => {
 			);
 
 			//モザイク変更
-	        mosaicChangeTx = nem.MosaicSupplyChangeTransaction.create(
-	            nem.Deadline.create(epochAdjustment),
-	            mosaicDefTx.mosaicId,
-	            nem.MosaicSupplyChangeAction.Increase,
-	            nem.UInt64.fromUint(1000000),
-	            networkType
-	        );
+			mosaicChangeTx = nem.MosaicSupplyChangeTransaction.create(
+				nem.Deadline.create(epochAdjustment),
+				mosaicDefTx.mosaicId,
+				nem.MosaicSupplyChangeAction.Increase,
+				nem.UInt64.fromUint(1000000),
+				networkType
+			);
 
 			const aggregateArray =
 			[createTx(bob.publicAccount,100).toAggregate(alice.publicAccount)]
@@ -1480,13 +1634,7 @@ describe('symbol-sdk.0.23.1',() => {
 			.toBeRejectedWith(new Error('Failure_Mosaic_Non_Transferable'));
 
 		});
-
-
 	});
-
-
-
-
 
 });//symbol-sdk
 </script>
