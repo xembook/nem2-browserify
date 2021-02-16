@@ -263,6 +263,25 @@ describe('symbol-sdk.0.23.1',() => {
 			bob = nem.Account.generateNewAccount(networkType);
 		});
 
+		it('catches Failure_Transfer_Out_Of_Order_Mosaics', async () => {
+
+			tx = nem.TransferTransaction.create(
+				nem.Deadline.create(epochAdjustment),
+				bob.address,
+				[
+					networkCurrency.createRelative(1),
+					networkCurrency.createRelative(1)
+				],
+				nem.PlainMessage.create(""),
+				networkType
+			).setMaxFee(minFeeMultiplier);
+
+
+			const signedTx = tx.signWith(alice,generationHash);
+			await expectAsync( transactionService.announce(signedTx,listener).toPromise())
+			.toBeRejectedWith(new Error('Failure_Transfer_Out_Of_Order_Mosaics'))
+		});
+
 		it('catches Failure_Core_Insufficient_Balance', async () => {
 
 			const signedTx = createAggregateTx(alice,1,bob,2)
