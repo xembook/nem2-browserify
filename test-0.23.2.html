@@ -13,7 +13,7 @@
 <script src="https://xembook.github.io/nem2-browserify/symbol-sdk-0.23.2.js"></script>
 <script>
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 60000;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 260000;
 describe('symbol-sdk.0.23.2',() => {
 
 	let networkType;
@@ -122,7 +122,7 @@ describe('symbol-sdk.0.23.2',() => {
 
 	});
 
-	describe('network properties', () => {
+	xdescribe('network properties', () => {
 
 		it('resolves to epochAdjustment', async () => {
 			expect(await repo.getEpochAdjustment().toPromise())
@@ -142,9 +142,9 @@ describe('symbol-sdk.0.23.2',() => {
 
 
 
-	describe('Lock',() => {
+	xdescribe('Lock',() => {
 
-		it('Failure_LockHash_Invalid_Mosaic_Amount', async () => {
+		it('catches Failure_LockHash_Invalid_Mosaic_Amount', async () => {
 
 			aggregateArray =
 			[createTx(bob.publicAccount,2).toAggregate(alice.publicAccount)]
@@ -171,7 +171,7 @@ describe('symbol-sdk.0.23.2',() => {
 			.toBeRejectedWith(new Error('Failure_LockHash_Invalid_Mosaic_Amount'))
 		});
 
-		it('Failure_LockHash_Invalid_Duration', async () => {
+		it('catches Failure_LockHash_Invalid_Duration', async () => {
 
 			aggregateArray =
 			[createTx(bob.publicAccount,2).toAggregate(alice.publicAccount)]
@@ -197,7 +197,7 @@ describe('symbol-sdk.0.23.2',() => {
 			await expectAsync( transactionService.announce(signedLockTx,listener).toPromise())
 			.toBeRejectedWith(new Error('Failure_LockHash_Invalid_Duration'))
 		});
-		it('Failure_LockSecret_Invalid_Duration', async () => {
+		it('catches Failure_LockSecret_Invalid_Duration', async () => {
 
 			carol = nem.Account.generateNewAccount(networkType);
 
@@ -231,7 +231,7 @@ describe('symbol-sdk.0.23.2',() => {
 
 	});
 
-	describe('Transaction',() => {
+	xdescribe('Transaction',() => {
 
 		let createCompleteAggregateTx;
 		let createTx;
@@ -436,7 +436,7 @@ describe('symbol-sdk.0.23.2',() => {
 
 
 	});
-	describe('Multisig',() => {
+	xdescribe('Multisig',() => {
 
 		beforeAll(async()=>{
 			getCarolAccounts = function(cnt){
@@ -600,7 +600,7 @@ describe('symbol-sdk.0.23.2',() => {
 			.toBeRejectedWith(new Error('Failure_Multisig_Operation_Prohibited_By_Account'));
 		});
 	});
-	describe('Metadata',() => {
+	xdescribe('Metadata',() => {
 
 		beforeAll(async()=>{
 			getCarolAccounts = function(cnt){
@@ -747,7 +747,7 @@ describe('symbol-sdk.0.23.2',() => {
 
 		});
 	});
-	describe('Restriction',() => {
+	xdescribe('Restriction',() => {
 
 		beforeAll(async()=>{
 
@@ -1053,7 +1053,7 @@ describe('symbol-sdk.0.23.2',() => {
 		});
 
 	});
-	describe('Namespace',() => {
+	xdescribe('Namespace',() => {
 
 		beforeEach(()=>{
 			bob = nem.Account.generateNewAccount(networkType);
@@ -1725,6 +1725,479 @@ describe('symbol-sdk.0.23.2',() => {
 			.toBeRejectedWith(new Error('Failure_Mosaic_Non_Transferable'));
 
 		});
+
+
+		xit('catches Failure_Aggregate_Too_Many_Transactions', async () => {
+
+			carol1 = nem.Account.generateNewAccount(networkType);
+
+
+
+			distMosaicTx = function(publicAccount,mosaics){
+				message = getRandMessage(1023);
+
+				return	 nem.TransferTransaction.create(
+					nem.Deadline.create(epochAdjustment),
+					publicAccount.address,
+					mosaics,
+					nem.PlainMessage.create(message),
+					networkType
+				);
+			}
+
+
+			mosaics = Array();
+			mosaicDefTxs = Array();
+			for(i=0; i<99;i++){
+
+				nonce = nem.MosaicNonce.createRandom();
+				mosaicId = nem.MosaicId.createFromNonce(nonce, bob.address)
+
+				//モザイク作成
+				mosaicDefTx = nem.MosaicDefinitionTransaction.create(
+					nem.Deadline.create(epochAdjustment),
+					nonce,
+					mosaicId,
+					nem.MosaicFlags.create(true, true, true),
+					0,
+					nem.UInt64.fromUint(5),
+					networkType
+				);
+				
+				mosaics.push(new nem.Mosaic(mosaicId, nem.UInt64.fromUint(0)));
+				mosaicDefTxs.push(mosaicDefTx.toAggregate(bob.publicAccount));
+			}
+			console.log(mosaics);
+
+			const aggregateArray =
+			[createTx(bob.publicAccount,100).toAggregate(alice.publicAccount)]
+			.concat(mosaicDefTxs)
+//			.concat(distMosaicTx(carol1.publicAccount,mosaics).toAggregate(bob.publicAccount))
+
+			res = await transactionService.announce(
+				getSignedTx(aggregateArray,[bob])
+			,listener).toPromise()
+			console.log(res);
+
+			listener.open();
+			mosaicDefTxs2 = Array();
+			for(i=0; i<97;i++){
+
+				nonce = nem.MosaicNonce.createRandom();
+				mosaicId = nem.MosaicId.createFromNonce(nonce, bob.address)
+
+				//モザイク作成
+				mosaicDefTx = nem.MosaicDefinitionTransaction.create(
+					nem.Deadline.create(epochAdjustment),
+					nonce,
+					mosaicId,
+					nem.MosaicFlags.create(true, true, true),
+					0,
+					nem.UInt64.fromUint(5),
+					networkType
+				);
+				
+				mosaics.push(new nem.Mosaic(mosaicId, nem.UInt64.fromUint(0)));
+				mosaicDefTxs2.push(mosaicDefTx.toAggregate(bob.publicAccount));
+			}
+			console.log(mosaics);
+
+			const aggregateArray2 =
+			[createTx(bob.publicAccount,100).toAggregate(alice.publicAccount)]
+			.concat(mosaicDefTxs2)
+//			.concat(distMosaicTx(carol1.publicAccount,mosaics).toAggregate(bob.publicAccount))
+
+			res2 = await transactionService.announce(
+				getSignedTx(aggregateArray,[bob])
+			,listener).toPromise()
+			console.log(res2);
+
+
+			listener.open();
+			mosaicDefTxs3 = Array();
+			for(i=0; i<97;i++){
+
+				nonce = nem.MosaicNonce.createRandom();
+				mosaicId = nem.MosaicId.createFromNonce(nonce, bob.address)
+
+				//モザイク作成
+				mosaicDefTx = nem.MosaicDefinitionTransaction.create(
+					nem.Deadline.create(epochAdjustment),
+					nonce,
+					mosaicId,
+					nem.MosaicFlags.create(true, true, true),
+					0,
+					nem.UInt64.fromUint(5),
+					networkType
+				);
+				
+				mosaics.push(new nem.Mosaic(mosaicId, nem.UInt64.fromUint(0)));
+				mosaicDefTxs3.push(mosaicDefTx.toAggregate(bob.publicAccount));
+			}
+			console.log(mosaics);
+
+			const aggregateArray3 =
+			[createTx(bob.publicAccount,100).toAggregate(alice.publicAccount)]
+			.concat(mosaicDefTxs3)
+//			.concat(distMosaicTx(carol1.publicAccount,mosaics).toAggregate(bob.publicAccount))
+			signedTx3 = getSignedTx(aggregateArray3,[bob]);
+			res3 = await transactionService.announce(
+				signedTx3
+			,listener).toPromise()
+			console.log(res3);
+			clog(signedTx3);
+
+
+			listener.open();
+			mosaicDefTxs4 = Array();
+			for(i=0; i<1;i++){
+
+				nonce = nem.MosaicNonce.createRandom();
+				mosaicId = nem.MosaicId.createFromNonce(nonce, bob.address)
+
+				//モザイク作成
+				mosaicDefTx = nem.MosaicDefinitionTransaction.create(
+					nem.Deadline.create(epochAdjustment),
+					nonce,
+					mosaicId,
+					nem.MosaicFlags.create(true, true, true),
+					0,
+					nem.UInt64.fromUint(5),
+					networkType
+				);
+				
+				mosaics.push(new nem.Mosaic(mosaicId, nem.UInt64.fromUint(0)));
+				mosaicDefTxs4.push(mosaicDefTx.toAggregate(bob.publicAccount));
+			}
+			console.log(mosaics);
+
+			console.log("=======================================");
+
+
+			console.log("------------------------------------------");
+
+			const aggregateArray4 =
+			[createTx(bob.publicAccount,100).toAggregate(alice.publicAccount)]
+			.concat(mosaicDefTxs4)
+//			.concat(distMosaicTx(carol1.publicAccount,mosaics).toAggregate(bob.publicAccount))
+			signedTx4 = getSignedTx(aggregateArray4,[bob]);
+			res4 = await transactionService.announce(
+				signedTx4
+			,listener).toPromise()
+			console.log(res4);
+			clog(signedTx4);
+
+
+			listener.open();
+
+			mosaicDefTxs5 = Array();
+			for(i=0; i<97;i++){
+
+				nonce = nem.MosaicNonce.createRandom();
+				mosaicId = nem.MosaicId.createFromNonce(nonce, bob.address)
+
+				//モザイク作成
+				mosaicDefTx = nem.MosaicDefinitionTransaction.create(
+					nem.Deadline.create(epochAdjustment),
+					nonce,
+					mosaicId,
+					nem.MosaicFlags.create(true, true, true),
+					0,
+					nem.UInt64.fromUint(5),
+					networkType
+				);
+				
+				mosaics.push(new nem.Mosaic(mosaicId, nem.UInt64.fromUint(0)));
+				mosaicDefTxs2.push(mosaicDefTx.toAggregate(bob.publicAccount));
+			}
+			console.log(mosaics);
+
+			const aggregateArray5 =
+			[createTx(bob.publicAccount,100).toAggregate(alice.publicAccount)]
+			.concat(mosaicDefTxs5)
+//			.concat(distMosaicTx(carol1.publicAccount,mosaics).toAggregate(bob.publicAccount))
+
+			res5 = await transactionService.announce(
+				getSignedTx(aggregateArray5,[bob])
+			,listener).toPromise()
+			console.log(res5);
+
+
+
+			listener.open();
+			mosaicDefTxs6 = Array();
+			for(i=0; i<97;i++){
+
+				nonce = nem.MosaicNonce.createRandom();
+				mosaicId = nem.MosaicId.createFromNonce(nonce, bob.address)
+
+				//モザイク作成
+				mosaicDefTx = nem.MosaicDefinitionTransaction.create(
+					nem.Deadline.create(epochAdjustment),
+					nonce,
+					mosaicId,
+					nem.MosaicFlags.create(true, true, true),
+					0,
+					nem.UInt64.fromUint(5),
+					networkType
+				);
+				
+				mosaics.push(new nem.Mosaic(mosaicId, nem.UInt64.fromUint(0)));
+				mosaicDefTxs2.push(mosaicDefTx.toAggregate(bob.publicAccount));
+			}
+			console.log(mosaics);
+
+			const aggregateArray6 =
+			[createTx(bob.publicAccount,100).toAggregate(alice.publicAccount)]
+			.concat(mosaicDefTxs6)
+//			.concat(distMosaicTx(carol1.publicAccount,mosaics).toAggregate(bob.publicAccount))
+
+			res6 = await transactionService.announce(
+				getSignedTx(aggregateArray6,[bob])
+			,listener).toPromise()
+			console.log(res6);
+
+
+			listener.open();
+
+			mosaicDefTxs7 = Array();
+			for(i=0; i<97;i++){
+
+				nonce = nem.MosaicNonce.createRandom();
+				mosaicId = nem.MosaicId.createFromNonce(nonce, bob.address)
+
+				//モザイク作成
+				mosaicDefTx = nem.MosaicDefinitionTransaction.create(
+					nem.Deadline.create(epochAdjustment),
+					nonce,
+					mosaicId,
+					nem.MosaicFlags.create(true, true, true),
+					0,
+					nem.UInt64.fromUint(5),
+					networkType
+				);
+				
+				mosaics.push(new nem.Mosaic(mosaicId, nem.UInt64.fromUint(0)));
+				mosaicDefTxs2.push(mosaicDefTx.toAggregate(bob.publicAccount));
+			}
+			console.log(mosaics);
+			const aggregateArray7 =
+			[createTx(bob.publicAccount,100).toAggregate(alice.publicAccount)]
+			.concat(mosaicDefTxs7)
+			.concat(distMosaicTx(carol1.publicAccount,mosaics).toAggregate(bob.publicAccount))
+
+
+
+			res7 = await expectAsync( transactionService.announce(
+				signedTx7
+			,listener).toPromise())
+			.toBeRejectedWith(new Error('Failure_Aggregate_Too_Many_Transactions'));
+			console.log(res7);
+			clog(signedTx7);
+
+		});
+
+
+
+
+
+
+
+		it('catches Failure_Aggregate_Too_Many_Transactions', async () => {
+
+			carol1 = nem.Account.generateNewAccount(networkType);
+
+			distMosaicTx = function(publicAccount,mosaics){
+				message = getRandMessage(1023);
+
+				return	 nem.TransferTransaction.create(
+					nem.Deadline.create(epochAdjustment),
+					publicAccount.address,
+					mosaics,
+					nem.PlainMessage.create(message),
+					networkType
+				);
+			}
+
+
+			mosaics = Array();
+			mosaicDefTxs = Array();
+			for(i=0; i<1;i++){
+
+				nonce = nem.MosaicNonce.createRandom();
+				mosaicId = nem.MosaicId.createFromNonce(nonce, bob.address)
+
+				//モザイク作成
+				mosaicDefTx = nem.MosaicDefinitionTransaction.create(
+					nem.Deadline.create(epochAdjustment),
+					nonce,
+					mosaicId,
+					nem.MosaicFlags.create(true, true, true),
+					0,
+					nem.UInt64.fromUint(15),
+					networkType
+				);
+
+				//モザイク変更
+				mosaicChangeTx = nem.MosaicSupplyChangeTransaction.create(
+					nem.Deadline.create(epochAdjustment),
+					mosaicDefTx.mosaicId,
+					nem.MosaicSupplyChangeAction.Increase,
+					nem.UInt64.fromUint(1000000),
+					networkType
+				);
+
+
+
+
+				
+				mosaics.push(new nem.Mosaic(mosaicId, nem.UInt64.fromUint(0)));
+				mosaicDefTxs.push(mosaicDefTx.toAggregate(bob.publicAccount));
+				mosaicDefTxs.push(mosaicChangeTx.toAggregate(bob.publicAccount));
+			}
+			console.log(mosaics);
+
+			const aggregateArray =
+			[createTx(bob.publicAccount,100).toAggregate(alice.publicAccount)]
+			.concat(mosaicDefTxs)
+
+			res = await transactionService.announce(
+				getSignedTx(aggregateArray,[bob])
+			,listener).toPromise()
+			console.log(res);
+
+			listener.open();
+			mosaicDefTxs2 = Array();
+			for(i=0; i<1;i++){
+
+				nonce = nem.MosaicNonce.createRandom();
+				mosaicId = nem.MosaicId.createFromNonce(nonce, bob.address)
+
+				//モザイク作成
+				mosaicDefTx = nem.MosaicDefinitionTransaction.create(
+					nem.Deadline.create(epochAdjustment),
+					nonce,
+					mosaicId,
+					nem.MosaicFlags.create(true, true, true),
+					0,
+					nem.UInt64.fromUint(15),
+					networkType
+				);
+				//モザイク変更
+				mosaicChangeTx = nem.MosaicSupplyChangeTransaction.create(
+					nem.Deadline.create(epochAdjustment),
+					mosaicDefTx.mosaicId,
+					nem.MosaicSupplyChangeAction.Increase,
+					nem.UInt64.fromUint(1000000),
+					networkType
+				);
+				
+				mosaics.push(new nem.Mosaic(mosaicId, nem.UInt64.fromUint(0)));
+				mosaicDefTxs2.push(mosaicDefTx.toAggregate(bob.publicAccount));
+				mosaicDefTxs2.push(mosaicChangeTx.toAggregate(bob.publicAccount));
+				
+			}
+			console.log(mosaics);
+
+			const aggregateArray2 =
+			[createTx(bob.publicAccount,100).toAggregate(alice.publicAccount)]
+			.concat(mosaicDefTxs2)
+			signedTx2 = getSignedTx(aggregateArray2,[bob]);
+			clog(signedTx2);
+
+			res2 = await transactionService.announce(
+				signedTx2
+			,listener).toPromise()
+			console.log(res2);
+
+
+			listener.open();
+			mosaicDefTxs3 = Array();
+			for(i=0; i<1;i++){
+
+				nonce = nem.MosaicNonce.createRandom();
+				mosaicId = nem.MosaicId.createFromNonce(nonce, bob.address)
+
+				//モザイク作成
+				mosaicDefTx = nem.MosaicDefinitionTransaction.create(
+					nem.Deadline.create(epochAdjustment),
+					nonce,
+					mosaicId,
+					nem.MosaicFlags.create(true, true, true),
+					0,
+					nem.UInt64.fromUint(15),
+					networkType
+				);
+				//モザイク変更
+				mosaicChangeTx = nem.MosaicSupplyChangeTransaction.create(
+					nem.Deadline.create(epochAdjustment),
+					mosaicDefTx.mosaicId,
+					nem.MosaicSupplyChangeAction.Increase,
+					nem.UInt64.fromUint(1000000),
+					networkType
+				);
+				
+				mosaics.push(new nem.Mosaic(mosaicId, nem.UInt64.fromUint(0)));
+				mosaicDefTxs3.push(mosaicDefTx.toAggregate(bob.publicAccount));
+				mosaicDefTxs3.push(mosaicChangeTx.toAggregate(bob.publicAccount));
+
+			}
+			console.log(mosaics);
+
+			const aggregateArray3 =
+			[createTx(bob.publicAccount,100).toAggregate(alice.publicAccount)]
+//			.concat(mosaicDefTxs3)
+			.concat(distMosaicTx(carol1.publicAccount,mosaics).toAggregate(bob.publicAccount))
+			signedTx3 = getSignedTx(aggregateArray3,[bob]);
+			clog(signedTx3);
+			res3 = await transactionService.announce(
+				signedTx3
+			,listener).toPromise()
+			console.log(res3);
+
+
+			res3 = await expectAsync( transactionService.announce(
+				signedTx3
+			,listener).toPromise())
+			.toBeRejectedWith(new Error('Failure_Aggregate_Too_Many_Transactions'));
+			console.log(res3);
+
+
+
+
+		});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	});
 
 });//symbol-sdk
