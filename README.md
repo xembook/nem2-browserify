@@ -1,5 +1,5 @@
 # nem2-browserify
-symbol-qr-libraryやsymbol-hd-walletsを使う場合はsymbol-sdk-pack-0.x.jsを使用してください。
+symbol-qr-libraryやsymbol-hd-walletsを使う場合はsymbol-sdk-pack-x.x.jsを使用してください。
 
 ## how to build
 ```sh
@@ -23,18 +23,18 @@ npm install symbol-uri-scheme
 npm install browserify -g
 npm install uglify-js -g
 
-browserify -r ./node_modules/symbol-sdk -r ./node_modules/rxjs/operators -r ./node_modules/rxjs -r ./node_modules/js-sha3 -r ./node_modules/jsbn -r ./node_modules/buffer -r ./node_modules/catbuffer-typescript -o symbol-sdk-1.0.0.js
+browserify -r ./node_modules/symbol-sdk -r ./node_modules/rxjs/operators -r ./node_modules/rxjs -r ./node_modules/js-sha3 -r ./node_modules/jsbn -r ./node_modules/buffer -r ./node_modules/catbuffer-typescript -o symbol-sdk-1.0.1.js
 
-browserify -r ./node_modules/symbol-qr-library -r ./node_modules/symbol-sdk -r ./node_modules/rxjs/operators -r ./node_modules/rxjs -r ./node_modules/js-sha3 -r ./node_modules/jsbn -r ./node_modules/buffer -r ./node_modules/catbuffer-typescript -r ./node_modules/symbol-hd-wallets -o symbol-sdk-pack-1.0.0.js
+browserify -r ./node_modules/symbol-qr-library -r ./node_modules/symbol-sdk -r ./node_modules/rxjs/operators -r ./node_modules/rxjs -r ./node_modules/js-sha3 -r ./node_modules/jsbn -r ./node_modules/buffer -r ./node_modules/catbuffer-typescript -r ./node_modules/symbol-hd-wallets -o symbol-sdk-pack-1.0.1.js
 
-uglifyjs -o  symbol-sdk-1.0.0.min.js  symbol-sdk-1.0.0.js
-uglifyjs -o  symbol-sdk-pack-1.0.0.min.js  symbol-sdk-pack-1.0.0.js
+uglifyjs -o  symbol-sdk-1.0.1.min.js  symbol-sdk-1.0.1.js
+uglifyjs -o  symbol-sdk-pack-1.0.1.min.js  symbol-sdk-pack-1.0.1.js
 
 ```
 
 ## how to use(sample)
 ```html
-<script src="symbol-sdk-1.0.0.js"></script>
+<script src="symbol-sdk-1.0.1.js"></script>
 ```
 
 ```js
