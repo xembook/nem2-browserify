@@ -23,20 +23,20 @@ npm install symbol-uri-scheme
 npm install browserify -g
 npm install uglify-js -g
 
-browserify -r ./node_modules/symbol-sdk -r ./node_modules/rxjs/operators -r ./node_modules/rxjs -r ./node_modules/js-sha3 -r ./node_modules/jsbn -r ./node_modules/buffer -r ./node_modules/catbuffer-typescript -r ./node_modules/js-sha256 -o symbol-sdk-2.0.0.js
+browserify -r ./node_modules/symbol-sdk -r ./node_modules/rxjs/operators -r ./node_modules/rxjs -r ./node_modules/js-sha3 -r ./node_modules/jsbn -r ./node_modules/buffer -r ./node_modules/catbuffer-typescript -r ./node_modules/js-sha256 -o symbol-sdk-2.0.4.js
 
-browserify -r ./node_modules/symbol-qr-library -r ./node_modules/symbol-sdk -r ./node_modules/rxjs/operators -r ./node_modules/rxjs -r ./node_modules/js-sha3 -r ./node_modules/jsbn -r ./node_modules/buffer -r ./node_modules/catbuffer-typescript -r ./node_modules/symbol-hd-wallets -r ./node_modules/symbol-uri-scheme -r ./node_modules/js-sha256 -o symbol-sdk-pack-2.0.0.js
+browserify -r ./node_modules/symbol-qr-library -r ./node_modules/symbol-sdk -r ./node_modules/rxjs/operators -r ./node_modules/rxjs -r ./node_modules/js-sha3 -r ./node_modules/jsbn -r ./node_modules/buffer -r ./node_modules/catbuffer-typescript -r ./node_modules/symbol-hd-wallets -r ./node_modules/symbol-uri-scheme -r ./node_modules/js-sha256 -o symbol-sdk-pack-2.0.4.js
 
 
 
-uglifyjs -o  symbol-sdk-2.0.0.min.js  symbol-sdk-2.0.0.js
-uglifyjs -o  symbol-sdk-pack-2.0.0.min.js  symbol-sdk-pack-2.0.0.js
+uglifyjs -o  symbol-sdk-2.0.4.min.js  symbol-sdk-2.0.4.js
+uglifyjs -o  symbol-sdk-pack-2.0.4.min.js  symbol-sdk-pack-2.0.4.js
 
 ```
 
 ## how to use(sample)
 ```html
-<script src="symbol-sdk-2.0.0.js"></script>
+<script src="symbol-sdk-2.0.4.js"></script>
 ```
 
 ```js
